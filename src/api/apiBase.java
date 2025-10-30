@@ -12,12 +12,12 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class apiAdapterBase<T> {
+public abstract class apiBase<T> {
     private static final Duration TIMEOUT_DURATION = Duration.ofSeconds(3);
     private final HttpClient httpClient;
     private final IJsonObjectMapper<T> mapper;
 
-    public apiAdapterBase(IJsonObjectMapper<T> mapper) {
+    public apiBase(IJsonObjectMapper<T> mapper) {
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(TIMEOUT_DURATION)
                 .build();

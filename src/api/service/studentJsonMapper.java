@@ -1,6 +1,6 @@
 package api.service;
 
-import model.dto.studentDTO;
+import api.dto.studentDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;

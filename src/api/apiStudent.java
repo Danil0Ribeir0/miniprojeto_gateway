@@ -2,14 +2,14 @@ package api;
 
 import api.service.studentJsonMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import model.dto.studentDTO;
+import api.dto.studentDTO;
 
 import java.util.List;
 
-public class apiAdapterStudent extends apiAdapterBase<studentDTO> {
+public class apiStudent extends apiBase<studentDTO> {
     private static final String URL_STUDENT = "https://rmi6vdpsq8.execute-api.us-east-2.amazonaws.com/msAluno";
 
-    public apiAdapterStudent() { super(new studentJsonMapper()); }
+    public apiStudent() { super(new studentJsonMapper()); }
 
     public String getBaseURL() { return URL_STUDENT; }
 

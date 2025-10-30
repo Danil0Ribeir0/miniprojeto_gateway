@@ -1,4 +1,4 @@
-package model.dto;
+package api.dto;
 
 public class studentDTO {
     private String id;
