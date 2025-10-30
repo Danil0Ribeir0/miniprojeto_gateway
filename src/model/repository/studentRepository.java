@@ -1,25 +1,31 @@
 package model.repository;
 
 import api.apiStudent;
-import api.dto.studentDTO;
+import model.entity.student;
+import model.mapper.studentMapper;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class studentRepository {
-    private final List<studentDTO> students;
+    private final List<student> students;
+    private final studentMapper mapper = new studentMapper();
 
     public studentRepository(apiStudent apiStudent) {
-        this.students = Optional.ofNullable(apiStudent.getStudents())
-                .orElse(Collections.emptyList());
+        List<api.dto.studentDTO> dtos = apiStudent.getStudents();
+
+        this.students = dtos.stream()
+                .map(mapper :: toEntity)
+                .filter(s -> s != null)
+                .collect(Collectors.toList());
     }
 
-    public List<studentDTO> getAllStudents() {
+    public List<student> getAllStudents() {
         return Collections.unmodifiableList(students);
     }
 
-    public studentDTO getStudentById(String id) {
+    public student getStudentById(String id) {
         if (id == null) return null;
 
         return students.stream()
