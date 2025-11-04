@@ -14,4 +14,13 @@ public class apiSubject extends apiBase<subjectDTO> {
     public String getBaseURL() { return URL_SUBJECT; }
 
     protected TypeReference<List<subjectDTO>> getTypeReference() { return new TypeReference<List<subjectDTO>>() {}; }
+
+    public List<subjectDTO> getSubject() { return executeGetList(); }
+
+    public subjectDTO getSubjectById(String id) {
+        return getSubject().stream()
+                .filter(subjectDTO -> subjectDTO.getId() != null && subjectDTO.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 }
