@@ -19,11 +19,10 @@ public class studentService {
         if (students.isEmpty()) {
             return Collections.emptyList();
         }
-
         return students;
     }
 
     public student getStudentById(String id) {
-        return repository.getStudentById(id);
+        return repository.getById(id);
     }
 }
