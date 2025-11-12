@@ -12,9 +12,9 @@ public class subjectMapper {
         // subjectDTO usa 'slots' e subject usa 'totalSlots'.
         return new subject(
                 dto.getId(),
-                dto.getCourse(),
-                dto.getName(),
-                dto.getSlots()
+                dto.getCurso(),
+                dto.getNome(),
+                dto.getVagas()
         );
     }
 }

@@ -2,27 +2,27 @@ package api.dto;
 
 public class subjectDTO {
     private String id;
-    private String course;
-    private String name;
-    private int slots;
+    private String curso; // Corresponde ao JSON
+    private String nome;  // ALTERADO: De 'name' para 'nome'
+    private int vagas;    // ALTERADO: De 'slots' para 'vagas'
 
     public String getId() { return id; }
-    public String getCourse() { return course; }
-    public String getName() { return name; }
-    public int getSlots() { return slots; }
+    public String getCurso() { return curso; }
+    public String getNome() { return nome; } // Getter alterado
+    public int getVagas() { return vagas; }  // Getter alterado
 
     public void setId(String id) { this.id = id; }
-    public void setCourse(String course) { this.course = course; }
-    public void setName(String name) { this.name = name; }
-    public void setSlots(int slots) { this.slots = slots; }
+    public void setCurso(String curso) { this.curso = curso; }
+    public void setNome(String nome) { this.nome = nome; } // Setter alterado
+    public void setVagas(int vagas) { this.vagas = vagas; } // Setter alterado
 
     @Override
     public String toString() {
         return "DisciplineDTO {" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", course='" + course + '\'' +
-                ", slots=" + slots +
+                ", nome='" + nome + '\'' +
+                ", curso='" + curso + '\'' +
+                ", vagas=" + vagas +
                 '}';
     }
 }

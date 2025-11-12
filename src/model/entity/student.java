@@ -14,6 +14,7 @@ public class student {
     private final String modalidade;
 
     private String status;
+    private String primaryEnrollmentId;
 
     private final Map<String, String> enrollments = new ConcurrentHashMap<>();
 
@@ -30,6 +31,11 @@ public class student {
     public String getCurso() { return curso; }
     public String getModalidade() { return modalidade; }
     public String getStatus() { return status; }
+    public String getPrimaryEnrollmentId() { return primaryEnrollmentId; }
+
+    public void setPrimaryEnrollmentId(String primaryEnrollmentId) {
+        this.primaryEnrollmentId = primaryEnrollmentId;
+    }
 
     public void setStatus(String status) { this.status = status; }
 

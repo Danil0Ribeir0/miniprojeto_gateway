@@ -1,49 +1,207 @@
 import api.apiStudent;
+import api.apiSubject;
 import model.entity.student;
+import model.entity.subject;
 import model.repository.studentRepository;
+import model.repository.subjectRepository;
+import model.service.student.enrollmentIdGenerator;
+import model.service.student.enrollmentService;
+import model.service.student.studentService;
 
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
-        // 1. Camada de API (Acesso ao Microsserviço)
-        System.out.println("Iniciando consumo da API de Discente...");
+        // --- 1. Inicialização e Injeção de Dependências ---
 
-        apiStudent api = new apiStudent();
+        // APIs
+        apiStudent apiStudent = new apiStudent();
+        apiSubject apiSubject = new apiSubject();
 
-        // 2. Camada de Repositório (Popula o cache em memória)
-        System.out.println("Populando Repositório de Discentes (cache in-memory)...");
-        studentRepository repository = new studentRepository(api);
+        // Repositórios (Carregam dados voláteis na memória)
+        studentRepository studentRepo = new studentRepository(apiStudent);
+        subjectRepository subjectRepo = new subjectRepository(apiSubject);
 
+        // Serviços de Negócio
+        studentService readService = new studentService(studentRepo);
+        enrollmentIdGenerator idGenerator = new enrollmentIdGenerator();
+        enrollmentService enrollmentService = new enrollmentService(
+                studentRepo,
+                subjectRepo,
+                idGenerator
+        );
 
-        System.out.println("Iniciando Camada de Serviço de Discentes...");
-        studentService service = new studentService(repository);
+        Scanner scanner = new Scanner(System.in);
+        int option = -1;
 
-        // Teste 1: Listar todos os discentes
-        System.out.println("\n--- TESTE 1: LISTAR TODOS OS DISCENTES ---");
-        List<student> allStudents = service.listAllStudents();
+        System.out.println("--- API GATEWAY ACADÊMICO - SIMULAÇÃO ---");
 
-        if (allStudents.isEmpty()) {
-            System.out.println("ERRO: Nenhuma lista de discente foi retornada. Verifique se a API está acessível ou se há erro de deserialização.");
-        } else {
-            System.out.println("Total de Discentes encontrados: " + allStudents.size());
-            for (student s : allStudents) {
-                // Consultar dados do discente (id, nome, curso, modalidade e status) [cite: 8]
-                System.out.println("ID: " + s.getId() + " | Nome: " + s.getNome() + " | Curso: " + s.getCurso() + " | Status: " + s.getStatus());
+        // ----------------------------------------------------
+
+        while (option != 0) {
+            displayMenu();
+            try {
+                option = scanner.nextInt();
+                scanner.nextLine(); // Consome a nova linha
+
+                switch (option) {
+                    case 1:
+                        listAllStudents(readService);
+                        break;
+                    case 2:
+                        getStudentDetails(readService, scanner);
+                        break;
+                    case 3:
+                        listAllSubjects(subjectRepo);
+                        break;
+                    case 4:
+                        registerStudentEnrollmentId(enrollmentService, scanner); // NOVO MÉTODO
+                        break;
+                    case 5:
+                        simulateEnrollment(enrollmentService, scanner); // DESLOCADO
+                        break;
+                    case 6:
+                        displayStudentEnrollments(studentRepo, scanner); // DESLOCADO
+                        break;
+                    case 7:
+                        simulateCancellation(enrollmentService, scanner); // DESLOCADO
+                        break;
+                    case 0:
+                        System.out.println("Encerrando o sistema. Estado volátil descartado.");
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.err.println("Entrada inválida. Por favor, digite um número.");
+                scanner.nextLine(); // Limpa o buffer
+                option = -1;
+            } catch (Exception e) {
+                System.err.println("Ocorreu um erro: " + e.getMessage());
             }
         }
+        scanner.close();
+    }
 
-        // Teste 2: Buscar um discente específico por ID (Exemplo com ID '1')
-        System.out.println("\n--- TESTE 2: BUSCAR DISCENTE POR ID (ID: 1) ---");
-        student student1 = service.getStudentById("1");
+    private static void displayMenu() {
+        System.out.println("\n-------------------------------------------");
+        System.out.println("Escolha uma opção (Funcionalidades de Teste):");
+        System.out.println("1. [CONSULTA] Listar todos os Discentes");
+        System.out.println("2. [CONSULTA] Detalhes do Discente por ID");
+        System.out.println("3. [CONSULTA] Listar todas as Disciplinas");
+        System.out.println("4. [SIMULAÇÃO] Gerar ID de Matrícula Principal"); // NOVO
+        System.out.println("5. [SIMULAÇÃO] Matricular Discente em Disciplina"); // DESLOCADO
+        System.out.println("6. [SIMULAÇÃO] Exibir Matrículas de um Discente"); // DESLOCADO
+        System.out.println("7. [SIMULAÇÃO] Cancelar Matrícula (por ID Único)"); // DESLOCADO
+        System.out.println("0. Sair");
+        System.out.print("Sua opção: ");
+    }
 
-        if (student1 != null) {
-            System.out.println("Discente encontrado: " + student1.getNome() + " | Curso: " + student1.getCurso() + " | Status: " + student1.getStatus());
-            System.out.println("Está ativo? " + student1.isStatusActive());
+    private static void registerStudentEnrollmentId(enrollmentService service, Scanner scanner) {
+        System.out.print("Digite o ID do Discente para gerar o ID de Matrícula Principal: ");
+        String studentId = scanner.nextLine();
+
+        enrollmentService.enrollmentResult result = service.registerStudentEnrollmentId(studentId);
+
+        System.out.println("\n--- RESULTADO DA MATRÍCULA PRINCIPAL ---");
+        System.out.println("Status: " + (result.isSuccess() ? "SUCESSO" : "FALHA"));
+        System.out.println("Mensagem: " + result.getMessage());
+        if (result.isSuccess()) {
+            System.out.println("ID de Matrícula Gerado: " + result.getEnrollmentId());
+        }
+    }
+
+    private static void listAllStudents(studentService service) {
+        System.out.println("\n--- LISTA DE DISCENTES ---");
+        List<student> students = service.listAllStudents();
+        if (students.isEmpty()) {
+            System.out.println("Nenhum discente encontrado na API.");
+            return;
+        }
+        students.forEach(s -> System.out.printf("ID: %s | Nome: %s | Curso: %s | Status: %s\n",
+                s.getId(), s.getNome(), s.getCurso(), s.getStatus()));
+    }
+
+    private static void getStudentDetails(studentService service, Scanner scanner) {
+        System.out.print("Digite o ID do Discente: ");
+        String id = scanner.nextLine();
+        student s = service.getStudentById(id);
+
+        if (s != null) {
+            System.out.println("\n--- DETALHES DO DISCENTE ---");
+            System.out.printf("ID: %s\n", s.getId());
+            System.out.printf("Nome: %s\n", s.getNome());
+            System.out.printf("Curso: %s\n", s.getCurso());
+            System.out.printf("Modalidade: %s\n", s.getModalidade());
+            System.out.printf("Status Acadêmico: %s (Ativo: %b)\n", s.getStatus(), s.isStatusActive());
         } else {
-            System.out.println("Discente com ID '1' não encontrado no cache ou a lista inicial veio vazia.");
+            System.out.println("Discente com ID " + id + " não encontrado.");
+        }
+    }
+
+    private static void listAllSubjects(subjectRepository repo) {
+        System.out.println("\n--- LISTA DE DISCIPLINAS ---");
+        List<subject> subjects = repo.getAll();
+        if (subjects.isEmpty()) {
+            System.out.println("Nenhuma disciplina encontrada na API.");
+            return;
+        }
+        subjects.forEach(s -> System.out.printf("ID: %s | Nome: %s | Curso: %s | Vagas: %d\n",
+                s.getId(), s.getName(), s.getCourse(), s.getTotalSlots()));
+    }
+
+    private static void simulateEnrollment(enrollmentService service, Scanner scanner) {
+        System.out.print("Digite o ID do Discente para matricular: ");
+        String studentId = scanner.nextLine();
+        System.out.print("Digite o ID da Disciplina: ");
+        String subjectId = scanner.nextLine();
+
+        enrollmentService.enrollmentResult result = service.simulateEnrollment(studentId, subjectId);
+
+        System.out.println("\n--- RESULTADO DA MATRÍCULA ---");
+        System.out.println("Status: " + (result.isSuccess() ? "SUCESSO" : "FALHA"));
+        System.out.println("Mensagem: " + result.getMessage());
+        if (result.isSuccess()) {
+            System.out.println("Novo ID de Matrícula Único: " + result.getEnrollmentId());
+        }
+    }
+
+    private static void displayStudentEnrollments(studentRepository repo, Scanner scanner) {
+        System.out.print("Digite o ID do Discente para exibir as matrículas: ");
+        String studentId = scanner.nextLine();
+        student s = repo.getById(studentId);
+
+        if (s == null) {
+            System.out.println("Discente com ID " + studentId + " não encontrado.");
+            return;
         }
 
-        System.out.println("\nTeste de consumo da API Discente concluído.");
+        List<Map.Entry<String, String>> enrollments = s.getEnrollments();
+
+        System.out.println("\n--- MATRÍCULAS SIMULADAS DE " + s.getNome() + " ---");
+        if (enrollments.isEmpty()) {
+            System.out.println("Discente não possui matrículas simuladas.");
+            return;
+        }
+
+        enrollments.forEach(e -> System.out.printf("ID Matrícula Único: %s | ID Disciplina: %s\n",
+                e.getKey(), e.getValue()));
+    }
+
+    private static void simulateCancellation(enrollmentService service, Scanner scanner) {
+        System.out.print("Digite o ID do Discente: ");
+        String studentId = scanner.nextLine();
+        System.out.print("Digite o ID ÚNICO da Matrícula para cancelar (o que foi gerado): ");
+        String enrollmentId = scanner.nextLine();
+
+        enrollmentService.enrollmentResult result = service.simulateCancellation(studentId, enrollmentId);
+
+        System.out.println("\n--- RESULTADO DO CANCELAMENTO ---");
+        System.out.println("Status: " + (result.isSuccess() ? "SUCESSO" : "FALHA"));
+        System.out.println("Mensagem: " + result.getMessage());
     }
 }
