@@ -21,7 +21,7 @@ public class subjectRepository extends baseRepository<subject> {
                 .collect(Collectors.toList());
     }
 
-    public Object getById(String id) {
+    public subject getById(String id) {
         if (id == null) return null;
 
         return entities.stream()

@@ -32,10 +32,8 @@ public class enrollmentService {
             return failResult.withMessage("Discente já possui o ID de Matrícula: " + student.getPrimaryEnrollmentId());
         }
 
-        // 1. Gera o ID único
         String newEnrollmentId = idGenerator.generateEnrollmentId();
 
-        // 2. Armazena no campo da entidade (persistência volátil)
         student.setPrimaryEnrollmentId(newEnrollmentId);
 
         return new enrollmentResult(true, "ID de Matrícula Principal gerado com sucesso.", newEnrollmentId);
@@ -49,45 +47,40 @@ public class enrollmentService {
             return failResult.withMessage("Discente não encontrado.");
         }
 
-        subject subject = (subject) subjectRepository.getById(subjectId);
+        subject subject = subjectRepository.getById(subjectId);
         if (subject == null) {
             return failResult.withMessage("Disciplina não encontrada.");
         }
 
         // --- Checagem das Regras de Negócio (Requisitos do Mini Projeto) ---
 
-        // Regra 1a: Situação acadêmica não trancada
         if (!student.isStatusActive()) {
             return failResult.withMessage("Matrícula não permitida. Discente com status acadêmico: " + student.getStatus());
         }
 
-        // Regra 1b: Máximo de 5 disciplinas simultâneas
         if (student.getEnrollmentCount() >= MAX_SUBJECTS_PER_STUDENT) {
             return failResult.withMessage("Matrícula não permitida. O discente já está matriculado em " + MAX_SUBJECTS_PER_STUDENT + " disciplinas.");
         }
 
-        // Verifica duplicidade (já matriculado na mesma disciplina)
         if (student.isEnrolledInSubject(subjectId)) {
             return failResult.withMessage("Matrícula não permitida. O discente já está matriculado nesta disciplina.");
         }
 
-        // Regra 1c: Disciplinas pertencem ao curso do discente
         if (!student.getCurso().equals(subject.getCourse())) {
             return failResult.withMessage("Matrícula não permitida. A disciplina '" + subject.getName() + "' pertence ao curso '" + subject.getCourse() + "', diferente do curso do discente ('" + student.getCurso() + "').");
         }
 
-        // Regra 2: Disciplina sem vagas
-        // Nota: A checagem de vagas foi omitida para simplificar a persistência volátil,
-        // mas a regra existe no documento. Caso seja implementado um controle global
-        // de vagas, esta lógica deve ser inserida aqui.
+        if (!subject.hasAvailableSlots()) {
+            return failResult.withMessage("Matrícula não permitida. A disciplina '" + subject.getName() + "' não possui vagas disponíveis (0 vagas).");
+        }
 
         // --- Execução da Simulação ---
         String newEnrollmentId = idGenerator.generateEnrollmentId();
 
-        // Persistência local (Coesão): Delega a mudança de estado para o student
         student.addEnrollment(newEnrollmentId, subjectId);
 
-        // Retorna o ID único em caso de sucesso
+        subject.decrementSlot();
+
         return new enrollmentResult(true, "Matrícula simulada com sucesso na disciplina '" + subject.getName() + "'. ID: " + newEnrollmentId, newEnrollmentId);
     }
 
@@ -103,6 +96,11 @@ public class enrollmentService {
 
         if (subjectId == null) {
             return new enrollmentResult(false, "Matrícula com ID " + enrollmentId + " não encontrada para este discente.", null);
+        }
+
+        subject subject = subjectRepository.getById(subjectId);
+        if (subject != null) {
+            subject.incrementSlot();
         }
 
         return new enrollmentResult(true, "Cancelamento da matrícula " + enrollmentId + " simulado com sucesso.", enrollmentId);

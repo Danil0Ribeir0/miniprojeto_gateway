@@ -59,7 +59,7 @@ public class Main {
                         listAllSubjects(subjectRepo);
                         break;
                     case 4:
-                        registerStudentEnrollmentId(enrollmentService, scanner); // NOVO MÉTODO
+                        registerStudentEnrollmentId(enrollmentService, scanner); 
                         break;
                     case 5:
                         simulateEnrollment(enrollmentService, scanner); // DESLOCADO
