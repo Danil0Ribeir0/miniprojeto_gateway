@@ -6,6 +6,7 @@ import model.repository.studentRepository;
 import model.repository.subjectRepository;
 import model.service.student.enrollmentIdGenerator;
 import model.service.student.enrollmentService;
+import model.service.student.studentOnboardingService;
 import model.service.student.studentService;
 
 import java.util.InputMismatchException;
@@ -35,6 +36,8 @@ public class Main {
                 idGenerator
         );
 
+        studentOnboardingService onboardingService = new studentOnboardingService(studentRepo, idGenerator);
+
         Scanner scanner = new Scanner(System.in);
         int option = -1;
 
@@ -46,7 +49,7 @@ public class Main {
             displayMenu();
             try {
                 option = scanner.nextInt();
-                scanner.nextLine(); // Consome a nova linha
+                scanner.nextLine();
 
                 switch (option) {
                     case 1:
@@ -59,16 +62,16 @@ public class Main {
                         listAllSubjects(subjectRepo);
                         break;
                     case 4:
-                        registerStudentEnrollmentId(enrollmentService, scanner); 
+                        registerStudentEnrollmentId(onboardingService, scanner);
                         break;
                     case 5:
-                        simulateEnrollment(enrollmentService, scanner); // DESLOCADO
+                        simulateEnrollment(enrollmentService, scanner);
                         break;
                     case 6:
-                        displayStudentEnrollments(studentRepo, scanner); // DESLOCADO
+                        displayStudentEnrollments(studentRepo, scanner);
                         break;
                     case 7:
-                        simulateCancellation(enrollmentService, scanner); // DESLOCADO
+                        simulateCancellation(enrollmentService, scanner);
                         break;
                     case 0:
                         System.out.println("Encerrando o sistema. Estado volátil descartado.");
@@ -101,7 +104,7 @@ public class Main {
         System.out.print("Sua opção: ");
     }
 
-    private static void registerStudentEnrollmentId(enrollmentService service, Scanner scanner) {
+    private static void registerStudentEnrollmentId(studentOnboardingService service, Scanner scanner) { // ASSINATURA ATUALIZADA
         System.out.print("Digite o ID do Discente para gerar o ID de Matrícula Principal: ");
         String studentId = scanner.nextLine();
 

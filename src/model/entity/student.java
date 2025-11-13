@@ -1,11 +1,9 @@
 package model.entity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class student {
     private final String id;
@@ -17,6 +15,7 @@ public class student {
     private String primaryEnrollmentId;
 
     private final Map<String, String> enrollments = new ConcurrentHashMap<>();
+    private final Map<String, String> bookReservations = new ConcurrentHashMap<>();
 
     public student(String id, String nome, String curso, String modalidade, String status) {
         this.id = id;
@@ -61,5 +60,21 @@ public class student {
 
     public List<Map.Entry<String, String>> getEnrollments() {
         return new ArrayList<>(this.enrollments.entrySet());
+    }
+
+    public void addBookReservation(String reservationId, String bookId) {
+        this.bookReservations.put(bookId, reservationId);
+    }
+
+    public String removeBookReservation(String bookId) {
+        return this.bookReservations.remove(bookId);
+    }
+
+    public boolean hasBookReservation(String bookId) {
+        return this.bookReservations.containsKey(bookId);
+    }
+
+    public List<Map.Entry<String, String>> getBookReservations() {
+        return new ArrayList<>(this.bookReservations.entrySet());
     }
 }

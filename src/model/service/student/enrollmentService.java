@@ -20,25 +20,6 @@ public class enrollmentService {
         this.idGenerator = idGenerator;
     }
 
-    public enrollmentResult registerStudentEnrollmentId(String studentId) {
-        student student = studentRepository.getById(studentId);
-        enrollmentResult failResult = new enrollmentResult(false, null, null);
-
-        if (student == null) {
-            return failResult.withMessage("Discente não encontrado.");
-        }
-
-        if (student.getPrimaryEnrollmentId() != null) {
-            return failResult.withMessage("Discente já possui o ID de Matrícula: " + student.getPrimaryEnrollmentId());
-        }
-
-        String newEnrollmentId = idGenerator.generateEnrollmentId();
-
-        student.setPrimaryEnrollmentId(newEnrollmentId);
-
-        return new enrollmentResult(true, "ID de Matrícula Principal gerado com sucesso.", newEnrollmentId);
-    }
-
     public enrollmentResult simulateEnrollment(String studentId, String subjectId) {
         enrollmentResult failResult = new enrollmentResult(false, null, null);
 
@@ -51,8 +32,6 @@ public class enrollmentService {
         if (subject == null) {
             return failResult.withMessage("Disciplina não encontrada.");
         }
-
-        // --- Checagem das Regras de Negócio (Requisitos do Mini Projeto) ---
 
         if (!student.isStatusActive()) {
             return failResult.withMessage("Matrícula não permitida. Discente com status acadêmico: " + student.getStatus());
@@ -74,7 +53,6 @@ public class enrollmentService {
             return failResult.withMessage("Matrícula não permitida. A disciplina '" + subject.getName() + "' não possui vagas disponíveis (0 vagas).");
         }
 
-        // --- Execução da Simulação ---
         String newEnrollmentId = idGenerator.generateEnrollmentId();
 
         student.addEnrollment(newEnrollmentId, subjectId);
