@@ -1,9 +1,5 @@
 package view;
 
-import controller.book.bookController;
-import controller.student.studentController;
-import controller.subject.subjectController;
-
 import view.book.bookView;
 import view.student.studentView;
 import view.subject.subjectView;
@@ -16,7 +12,7 @@ public class mainView {
     private final subjectView subjectView;
     private final bookView bookView;
 
-    public mainView(bookController bookController) {
+    public mainView() {
         this.studentView = new studentView();
         this.subjectView = new subjectView();
         this.bookView = new bookView();
