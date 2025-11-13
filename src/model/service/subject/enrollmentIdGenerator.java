@@ -1,4 +1,4 @@
-package model.service.student;
+package model.service.subject;
 
 import java.time.LocalDate;
 import java.util.Random;

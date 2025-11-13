@@ -1,4 +1,4 @@
-package model.service.student;
+package model.service.subject;
 
 import model.entity.student;
 import model.entity.subject;

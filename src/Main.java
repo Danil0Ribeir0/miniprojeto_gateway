@@ -4,8 +4,8 @@ import model.entity.student;
 import model.entity.subject;
 import model.repository.studentRepository;
 import model.repository.subjectRepository;
-import model.service.student.enrollmentIdGenerator;
-import model.service.student.enrollmentService;
+import model.service.subject.enrollmentIdGenerator;
+import model.service.subject.enrollmentService;
 import model.service.student.studentOnboardingService;
 import model.service.student.studentService;
 

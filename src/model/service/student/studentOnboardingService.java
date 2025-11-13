@@ -2,8 +2,9 @@ package model.service.student;
 
 import model.entity.student;
 import model.repository.studentRepository;
+import model.service.subject.enrollmentIdGenerator;
 
-import static model.service.student.enrollmentService.enrollmentResult;
+import static model.service.subject.enrollmentService.enrollmentResult;
 
 public class studentOnboardingService {
     private final studentRepository studentRepository;
