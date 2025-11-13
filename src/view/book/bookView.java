@@ -11,8 +11,8 @@ import java.util.Scanner;
 public class bookView {
     private final bookController controller;
 
-    public bookView(bookController controller) {
-        this.controller = controller;
+    public bookView() {
+        this.controller = new bookController();
     }
 
     public void displayBookOptions(Scanner scanner) {

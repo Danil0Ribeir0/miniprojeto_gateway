@@ -11,11 +11,9 @@ public class bookController {
     private final bookService readService;
     private final bookReservationService reservationService;
 
-    public bookController(
-            bookService readService,
-            bookReservationService reservationService) {
-        this.readService = readService;
-        this.reservationService = reservationService;
+    public bookController() {
+        this.readService = new bookService();
+        this.reservationService = new bookReservationService();
     }
 
     public List<book> listAllBooks() {

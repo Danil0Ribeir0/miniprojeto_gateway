@@ -4,6 +4,8 @@ import model.entity.student;
 import model.entity.subject;
 import model.repository.studentRepository;
 import model.repository.subjectRepository;
+import model.service.student.studentOnboardingService;
+import model.service.student.studentService;
 
 public class enrollmentService {
     private static final int MAX_SUBJECTS_PER_STUDENT = 5;
@@ -11,13 +13,12 @@ public class enrollmentService {
     private final subjectRepository subjectRepository;
     private final enrollmentIdGenerator idGenerator;
 
-    public enrollmentService(
-            studentRepository studentRepository,
-            subjectRepository subjectRepository,
-            enrollmentIdGenerator idGenerator) {
-        this.studentRepository = studentRepository;
-        this.subjectRepository = subjectRepository;
-        this.idGenerator = idGenerator;
+    public enrollmentService() {
+        this.studentRepository = new studentRepository();
+
+        this.idGenerator = new enrollmentIdGenerator();
+
+        this.subjectRepository = new subjectRepository();
     }
 
     public enrollmentResult simulateEnrollment(String studentId, String subjectId) {

@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class studentView {
     private final studentController controller;
 
-    public studentView(studentController controller) {
-        this.controller = controller;
+    public studentView() {
+        this.controller = new studentController();
     }
 
     public void displayStudentOptions(Scanner scanner) {

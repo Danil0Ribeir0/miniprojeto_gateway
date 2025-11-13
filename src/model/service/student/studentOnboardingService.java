@@ -10,11 +10,9 @@ public class studentOnboardingService {
     private final studentRepository studentRepository;
     private final enrollmentIdGenerator idGenerator;
 
-    public studentOnboardingService(
-            studentRepository studentRepository,
-            enrollmentIdGenerator idGenerator) {
-        this.studentRepository = studentRepository;
-        this.idGenerator = idGenerator;
+    public studentOnboardingService() {
+        this.studentRepository = new studentRepository();
+        this.idGenerator = new enrollmentIdGenerator();
     }
 
     public enrollmentResult registerStudentEnrollmentId(String studentId) {

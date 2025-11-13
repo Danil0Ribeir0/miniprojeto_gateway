@@ -11,8 +11,8 @@ import java.util.Scanner;
 public class subjectView {
     private final subjectController controller;
 
-    public subjectView(subjectController controller) {
-        this.controller = controller;
+    public subjectView() {
+        this.controller = new subjectController();
     }
 
     public void displaySubjectOptions(Scanner scanner) {

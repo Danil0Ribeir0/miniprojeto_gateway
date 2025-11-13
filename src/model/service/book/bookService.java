@@ -9,8 +9,8 @@ import java.util.List;
 public class bookService {
     private final bookRepository repository;
 
-    public bookService(bookRepository repository) {
-        this.repository = repository;
+    public bookService() {
+        this.repository = new bookRepository();
     }
 
     public List<book> listAllBooks() {

@@ -16,10 +16,10 @@ public class mainView {
     private final subjectView subjectView;
     private final bookView bookView;
 
-    public mainView(studentController studentController, subjectController subjectController, bookController bookController) {
-        this.studentView = new studentView(studentController);
-        this.subjectView = new subjectView(subjectController);
-        this.bookView = new bookView(bookController);
+    public mainView(bookController bookController) {
+        this.studentView = new studentView();
+        this.subjectView = new subjectView();
+        this.bookView = new bookView();
     }
 
     public void start() {

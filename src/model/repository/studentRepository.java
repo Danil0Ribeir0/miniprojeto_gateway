@@ -11,8 +11,8 @@ public class studentRepository extends baseRepository<student> {
 
     private static final studentMapper MAPPER = new studentMapper();
 
-    public studentRepository(apiStudent apiStudent) {
-        super(loadAndMapStudents(apiStudent));
+    public studentRepository() {
+        super(loadAndMapStudents(new apiStudent()));
     }
 
     private static List<student> loadAndMapStudents(apiStudent apiStudent) {

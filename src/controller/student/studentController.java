@@ -5,6 +5,7 @@ import model.repository.studentRepository;
 import model.service.student.studentOnboardingService;
 import model.service.student.studentService;
 import model.service.subject.enrollmentService.enrollmentResult;
+import model.service.subject.enrollmentIdGenerator;
 
 import java.util.List;
 
@@ -13,13 +14,13 @@ public class studentController {
     private final studentOnboardingService onboardingService;
     private final studentRepository studentRepository;
 
-    public studentController(
-            studentService readService,
-            studentOnboardingService onboardingService,
-            studentRepository studentRepository) {
-        this.readService = readService;
-        this.onboardingService = onboardingService;
-        this.studentRepository = studentRepository;
+    public studentController() {
+        this.studentRepository = new studentRepository();
+
+        enrollmentIdGenerator idGenerator = new enrollmentIdGenerator();
+
+        this.readService = new studentService();
+        this.onboardingService = new studentOnboardingService();
     }
 
     public List<student> listAllStudents() {

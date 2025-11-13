@@ -11,11 +11,9 @@ public class subjectController {
     private final subjectRepository subjectRepository;
     private final enrollmentService enrollmentService;
 
-    public subjectController(
-            subjectRepository subjectRepository,
-            enrollmentService enrollmentService) {
-        this.subjectRepository = subjectRepository;
-        this.enrollmentService = enrollmentService;
+    public subjectController() {
+        this.subjectRepository = new subjectRepository();
+        this.enrollmentService = new enrollmentService();
     }
 
     public List<subject> listAllSubjects() {

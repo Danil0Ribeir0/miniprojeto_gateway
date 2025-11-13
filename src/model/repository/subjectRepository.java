@@ -1,5 +1,6 @@
 package model.repository;
 
+import api.apiStudent;
 import api.apiSubject;
 import model.entity.subject;
 import model.mapper.subjectMapper;
@@ -10,8 +11,9 @@ import java.util.stream.Collectors;
 public class subjectRepository extends baseRepository<subject> {
     private static final subjectMapper MAPPER = new subjectMapper();
 
-    public subjectRepository(apiSubject apiSubject) { super(loadAndMapSubjects(apiSubject)); }
-
+    public subjectRepository() {
+        super(loadAndMapSubjects(new apiSubject()));
+    }
     private static List<subject> loadAndMapSubjects(apiSubject apiSubject) {
         List<api.dto.subjectDTO> dtos = apiSubject.getSubject();
 

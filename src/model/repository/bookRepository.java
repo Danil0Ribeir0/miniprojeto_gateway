@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 public class bookRepository extends baseRepository<book>{
     private static final bookMapper MAPPER = new bookMapper();
 
-    public bookRepository(apiBook apiBook) { super(loadAndMapBooks(apiBook)); }
+    public bookRepository() {
+        super(loadAndMapBooks(new apiBook()));
+    }
 
     private static List<book> loadAndMapBooks(apiBook apiBook) {
         List<api.dto.bookDTO> dtos = apiBook.getBooks();

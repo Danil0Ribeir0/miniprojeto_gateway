@@ -24,19 +24,15 @@ public class Main {
         apiSubject apiSubject = new apiSubject();
 
         // Repositórios (Carregam dados voláteis na memória)
-        studentRepository studentRepo = new studentRepository(apiStudent);
-        subjectRepository subjectRepo = new subjectRepository(apiSubject);
+        studentRepository studentRepo = new studentRepository();
+        subjectRepository subjectRepo = new subjectRepository();
 
         // Serviços de Negócio
-        studentService readService = new studentService(studentRepo);
+        studentService readService = new studentService();
         enrollmentIdGenerator idGenerator = new enrollmentIdGenerator();
-        enrollmentService enrollmentService = new enrollmentService(
-                studentRepo,
-                subjectRepo,
-                idGenerator
-        );
+        enrollmentService enrollmentService = new enrollmentService();
 
-        studentOnboardingService onboardingService = new studentOnboardingService(studentRepo, idGenerator);
+        studentOnboardingService onboardingService = new studentOnboardingService();
 
         Scanner scanner = new Scanner(System.in);
         int option = -1;

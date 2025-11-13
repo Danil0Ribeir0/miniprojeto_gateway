@@ -9,11 +9,9 @@ public class bookReservationService {
     private final studentRepository studentRepository;
     private final bookRepository bookRepository;
 
-    public bookReservationService(
-            studentRepository studentRepository,
-            bookRepository bookRepository) {
-        this.studentRepository = studentRepository;
-        this.bookRepository = bookRepository;
+    public bookReservationService() {
+        this.studentRepository = new studentRepository();
+        this.bookRepository = new bookRepository();
     }
 
     public ReservationResult simulateReservation(String studentId, String bookId) {
@@ -33,12 +31,10 @@ public class bookReservationService {
             return failResult.withMessage("Livro não encontrado no acervo.");
         }
 
-        // 1. O livro só pode ser reservado se marcado como disponível.
         if (!book.isAvailable()) {
             return failResult.withMessage("Reserva não permitida. O livro '" + book.getTitle() + "' já está indisponível/reservado.");
         }
 
-        // 2. Verifica se o discente já reservou este livro.
         if (student.hasBookReservation(bookId)) {
             return failResult.withMessage("Reserva não permitida. O discente já possui reserva para este livro.");
         }
