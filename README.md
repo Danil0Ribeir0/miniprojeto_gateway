@@ -1,59 +1,67 @@
-# 📘 API Gateway Acadêmico (Mini Projeto)
+# API Gateway Acadêmico (Mini Projeto)
 
 ## 1. Objetivo do Projeto
 
-[cite_start]Este projeto consiste em uma aplicação monolítica em Java que atua como **Fachada/API Gateway** para três microsserviços acadêmicos externos simulados: **Discente, Disciplina e Biblioteca**[cite: 7]. [cite_start]O objetivo é agregar e apresentar informações de diferentes domínios em uma interface unificada para o usuário final[cite: 7].
+Este projeto consiste em uma aplicação monolítica em Java que atua como **Fachada/API Gateway** para três microsserviços acadêmicos externos simulados: **Discente, Disciplina e Biblioteca**. O objetivo é agregar e apresentar informações de diferentes domínios em uma interface unificada para o usuário final.
 
 * As operações de consulta (leitura) são realizadas nos microsserviços externos.
-* [cite_start]As operações de escrita (Matrícula, Reserva) são **simulações locais**, mantendo o estado volátil apenas em **memória** enquanto a aplicação estiver em execução, sem afetar os serviços externos[cite: 8, 15].
+* As operações de escrita (Matrícula, Reserva) são **simulações locais**, mantendo o estado volátil apenas em **memória** enquanto a aplicação estiver em execução, sem afetar os serviços externos.
 
 ---
 
 ## 2. Arquitetura Adotada: MVC Moderno (Camadas)
 
-[cite_start]O projeto segue o padrão arquitetural **Model-View-Controller (MVC)** em camadas, promovendo a separação de responsabilidades e aplicando princípios de design como **SOLID** e **GRASP**[cite: 61, 62].
+O projeto segue o padrão arquitetural **Model-View-Controller (MVC)** em camadas, promovendo a separação de responsabilidades e aplicando princípios de design como **SOLID** e **GRASP**.
 
 ### Estrutura de Camadas (Pacotes)
 
 | Camada | Pacote | Responsabilidade Principal | Conceito |
 | :--- | :--- | :--- | :--- |
 | **View** | `view.*` | Interação com o usuário (CLI). Exibe dados e captura *inputs*. | **Controller (GRASP)** |
-| **Controller** | `controller.*` | Ponto de entrada das requisições. [cite_start]Atua como **Fachada** da aplicação[cite: 83], delegando tarefas complexas aos serviços do Model. | **Controller (GRASP)** |
-| **Model - Service** | `model.service.*` | [cite_start]Contém toda a **lógica de negócio** e validações (Ex: limite de 5 disciplinas, verificação de status ativo)[cite: 27]. | **Alta Coesão (GRASP), SRP (SOLID)** |
-| **Model - Repository** | `model.repository.*` | Camada de acesso a dados. [cite_start]Implementa o padrão **Singleton** e o **Repositório em Memória**[cite: 22]. | **DIP (SOLID)** via interface `IRepository` |
-| **Model - Entity** | `model.entity.*` | Objetos que representam os dados do domínio. [cite_start]Também gerenciam o **estado volátil simulado** (matrículas e reservas)[cite: 15]. | |
-| **Model - API/DTO** | `api.*`, `api.dto.*` | [cite_start]Comunicação HTTP com serviços externos e *mapping* de dados (Jackson)[cite: 32]. | **Baixo Acoplamento (GRASP)** |
+| **Controller** | `controller.*` | Ponto de entrada das requisições. Atua como **Fachada** da aplicação, delegando tarefas complexas aos serviços do Model. | **Controller (GRASP)** |
+| **Model - Service** | `model.service.*` | Contém toda a **lógica de negócio** e validações (Ex: limite de 5 disciplinas, verificação de status ativo). | **Alta Coesão (GRASP), SRP (SOLID)** |
+| **Model - Repository** | `model.repository.*` | Camada de acesso a dados. Implementa o padrão **Singleton** e o **Repositório em Memória**. | **DIP (SOLID)** via interface `IRepository` |
+| **Model - Entity** | `model.entity.*` | Objetos que representam os dados do domínio. Também gerenciam o **estado volátil simulado** (matrículas e reservas). | |
+| **Model - API/DTO** | `api.*`, `api.dto.*` | Comunicação HTTP com serviços externos e *mapping* de dados (Jackson). | **Baixo Acoplamento (GRASP)** |
 
 ---
 
 ## 3. Padrões de Design e Princípios Aplicados
 
-### 3.1. [cite_start]Princípios SOLID (Mínimo 2) [cite: 62]
+### 3.1. Princípios SOLID (Mínimo 2)
 
 | Princípio | Aplicação no Projeto |
 | :--- | :--- |
-| **Single Responsibility Principle (SRP)** | Cada classe tem um único motivo para mudar, como o `studentMapper.java` que só lida com a conversão de DTO para Entity. |
-| **Dependency Inversion Principle (DIP)** | Módulos de alto nível (`apiBase.java`) dependem de abstrações (`IJsonObjectMapper.java`) para a deserialização JSON, em vez de implementações concretas de baixo nível. |
+| **Single Responsibility Principle (SRP)** | Evidente na divisão entre serviços. Ex: `bookService.java` apenas lista dados, enquanto `bookReservationService.java` lida estritamente com a lógica de simulação de reserva. |
+| **Dependency Inversion Principle (DIP)** | Módulos de alto nível não dependem de módulos de baixo nível. Ex: A classe base `apiBase.java` depende da abstração `IJsonObjectMapper.java` para a deserialização JSON, não de implementações concretas. |
 
-### 3.2. [cite_start]Padrões GRASP (Mínimo 3) [cite: 62]
+### 3.2. Padrões GRASP (Mínimo 3)
 
 | Padrão | Aplicação no Projeto |
 | :--- | :--- |
-| **Controller** | As classes `*Controller` (Ex: `studentController.java`) recebem as requisições do usuário e orquestram a execução na camada de serviço, desacoplando a lógica de negócio da interface. |
-| **High Cohesion (Alta Coesão)** | Classes são altamente focadas, como `enrollmentIdGenerator.java`, que existe unicamente para criar o ID Único de Matrícula/Transação. |
+| **Controller** | As classes `*Controller` (Ex: `studentController.java`) recebem todas as requisições do usuário (`View`) e orquestram a execução na camada de serviço, desacoplando a lógica de negócio da interface. |
+| **High Cohesion (Alta Coesão)** | Classes são altamente focadas. Ex: `enrollmentIdGenerator.java` existe unicamente para criar o ID Único de Matrícula/Transação. |
 | **Low Coupling (Baixo Acoplamento)** | O projeto utiliza a Inversão de Dependência via interfaces (`IRepository`), reduzindo a interdependência direta entre as classes. |
 
 ---
 
 ## 4. Requisitos Não Funcionais
 
-### 4.1. Desempenho e Tolerância a Falhas
+### 4.1. Usabilidade (10 Heurísticas de Nielsen)
 
-* [cite_start]**Controle de Timeout:** A classe base `apiBase.java` impõe um tempo limite de **3 segundos** para todas as requisições HTTP[cite: 68].
-* [cite_start]**Logging de Desempenho:** Caso a requisição exceda 3 segundos, um log de alerta é gerado e repassado para a *View* para notificação[cite: 68].
-* [cite_start]**Degradação Graciosa:** Em caso de falha de comunicação HTTP (status != 200) ou erro de I/O, a aplicação retorna listas vazias e exibe uma **mensagem amigável** na *View*, garantindo que o sistema não trave e que o usuário seja informado da falha do serviço externo[cite: 68].
+O design da interface de linha de comando (CLI) foi concebido seguindo as 10 Heurísticas de Nielsen, garantindo uma boa **User Experience (UX)**  mesmo em ambiente de console:
 
-### 4.2. [cite_start]Endpoints dos Microsserviços Externos [cite: 37, 39, 45, 46, 53, 54]
+* **Visibilidade e Feedback:** O sistema exibe o menu principal e submenus após cada ação e sempre retorna mensagens claras de **SUCESSO** ou **FALHA** para as simulações.
+* **Controle e Liberdade:** O usuário tem a opção de **Voltar** (opção 0) em todos os níveis, oferecendo controle sobre a navegação.
+* **Prevenção e Tratamento de Erros:** Erros de digitação (*input*) são capturados (`InputMismatchException`) e as regras de negócio atuam como prevenção de erros lógicos (Ex: não permitir reserva de livro indisponível).
+* **Consistência e Padrões:** A estrutura e a terminologia (`Discente`, `Disciplina`) são mantidas de forma uniforme em toda a aplicação.
+
+### 4.2. Desempenho e Tolerância a Falhas
+
+* **Controle de Timeout:** A classe base `apiBase.java` impõe um tempo limite de **3 segundos** para todas as requisições HTTP.
+* **Degradação Graciosa:** Em caso de falha de comunicação HTTP (status != 200) ou erro de I/O, a aplicação retorna listas vazias e exibe uma **mensagem amigável** na *View*, informando a falha do serviço externo.
+
+### 4.3. Endpoints dos Microsserviços Externos
 
 | Serviço | Endpoint Base |
 | :--- | :--- |
