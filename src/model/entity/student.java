@@ -10,8 +10,8 @@ public class student {
     private final String nome;
     private final String curso;
     private final String modalidade;
+    private final String status;
 
-    private String status;
     private String primaryEnrollmentId;
 
     private final Map<String, String> enrollments = new ConcurrentHashMap<>();
@@ -35,8 +35,6 @@ public class student {
     public void setPrimaryEnrollmentId(String primaryEnrollmentId) {
         this.primaryEnrollmentId = primaryEnrollmentId;
     }
-
-    public void setStatus(String status) { this.status = status; }
 
     public boolean isStatusActive() {
         return "ativo".equalsIgnoreCase(this.status);
