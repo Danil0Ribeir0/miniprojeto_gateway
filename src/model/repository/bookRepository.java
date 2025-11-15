@@ -8,10 +8,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class bookRepository extends baseRepository<book>{
+    private static bookRepository INSTANCE = null;
     private static final bookMapper MAPPER = new bookMapper();
 
-    public bookRepository() {
+    private bookRepository() {
         super(loadAndMapBooks(new apiBook()));
+    }
+
+    public static synchronized bookRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new bookRepository();
+        }
+        return INSTANCE;
     }
 
     private static List<book> loadAndMapBooks(apiBook apiBook) {

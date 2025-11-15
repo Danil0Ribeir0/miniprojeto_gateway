@@ -8,11 +8,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class studentRepository extends baseRepository<student> {
-
+    private static studentRepository INSTANCE = null;
     private static final studentMapper MAPPER = new studentMapper();
 
-    public studentRepository() {
+    private studentRepository() {
         super(loadAndMapStudents(new apiStudent()));
+    }
+
+    public static synchronized studentRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new studentRepository();
+        }
+        return INSTANCE;
     }
 
     private static List<student> loadAndMapStudents(apiStudent apiStudent) {

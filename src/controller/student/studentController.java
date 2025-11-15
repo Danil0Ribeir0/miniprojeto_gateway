@@ -16,7 +16,7 @@ public class studentController {
     private final studentRepository studentRepository;
 
     public studentController() {
-        this.studentRepository = new studentRepository();
+        this.studentRepository = model.repository.studentRepository.getInstance();
 
         enrollmentIdGenerator idGenerator = new enrollmentIdGenerator();
 

@@ -14,12 +14,11 @@ public class bookController {
     private final bookService readService;
     private final bookReservationService reservationService;
 
-    public bookController() {
-        // CORREÇÃO: Criação ÚNICA dos repositórios
-        bookRepository bookRepository = new bookRepository();
-        studentRepository studentRepository = new studentRepository();
 
-        // INJEÇÃO: Passa as instâncias únicas para os serviços.
+    public bookController() {
+        bookRepository bookRepository = model.repository.bookRepository.getInstance();
+        studentRepository studentRepository = model.repository.studentRepository.getInstance();
+
         this.readService = new bookService(bookRepository);
         this.reservationService = new bookReservationService(studentRepository, bookRepository);
     }

@@ -14,8 +14,8 @@ public class subjectController {
     private final enrollmentService enrollmentService;
 
     public subjectController() {
-        this.subjectRepository = new subjectRepository();
-        studentRepository studentRepository = new studentRepository();
+        this.subjectRepository = model.repository.subjectRepository.getInstance();
+        studentRepository studentRepository = model.repository.studentRepository.getInstance();
 
         this.enrollmentService = new enrollmentService(studentRepository, this.subjectRepository);
     }
