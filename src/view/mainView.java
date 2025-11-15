@@ -41,7 +41,7 @@ public class mainView {
                         bookView.displayBookOptions(scanner);
                         break;
                     case 0:
-                        System.out.println("Encerrando o sistema. Estado volátil descartado.");
+                        System.out.println("Encerrando o sistema.");
                         break;
                     default:
                         System.out.println("Opção inválida. Tente novamente.");

@@ -6,6 +6,7 @@ import model.service.student.studentOnboardingService;
 import model.service.student.studentService;
 import model.service.subject.enrollmentService.enrollmentResult;
 import model.service.subject.enrollmentIdGenerator;
+import api.apiBase;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class studentController {
 
         enrollmentIdGenerator idGenerator = new enrollmentIdGenerator();
 
-        this.readService = new studentService();
-        this.onboardingService = new studentOnboardingService();
+        this.readService = new studentService(this.studentRepository);
+        this.onboardingService = new studentOnboardingService(this.studentRepository);
     }
 
     public List<student> listAllStudents() {
@@ -38,4 +39,6 @@ public class studentController {
     public student getStudentForEnrollmentsDisplay(String studentId) {
         return studentRepository.getById(studentId);
     }
+
+    public String getLastApiMessage() {return apiBase.getLastApiMessage(); }
 }

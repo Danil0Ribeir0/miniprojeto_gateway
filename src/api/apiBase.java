@@ -17,6 +17,8 @@ public abstract class apiBase<T> {
     private final HttpClient httpClient;
     private final IJsonObjectMapper<T> mapper;
 
+    private static String lastApiMessage = null;
+
     public apiBase(IJsonObjectMapper<T> mapper) {
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(TIMEOUT_DURATION)
@@ -24,9 +26,16 @@ public abstract class apiBase<T> {
         this.mapper = mapper;
     }
 
+    public static String getLastApiMessage() {
+        String message = lastApiMessage;
+        lastApiMessage = null;
+        return message;
+    }
+
     public abstract String getBaseURL();
 
     public List<T> executeGetList() {
+        lastApiMessage = null;
         Instant startTime = Instant.now();
         String url = getBaseURL();
 
@@ -40,17 +49,17 @@ public abstract class apiBase<T> {
             long durationMs = Duration.between(startTime, Instant.now()).toMillis();
 
             if (durationMs > TIMEOUT_DURATION.toMillis()) {
-                System.out.println("LOG: Requisição à API "+ url +" excedeu 3s: "+ durationMs +"ms");
+                lastApiMessage = "LOG: Requisição à API "+ url +" excedeu 3s: "+ durationMs +"ms";
             }
 
             if (response.statusCode() == 200) {
                 return mapper.mapJsonToList(response.body());
             } else {
-                System.err.println("Falha HTTP na API "+ url +". Status: "+ response.statusCode());
+                lastApiMessage = "Falha HTTP na API "+ url +". Status: "+ response.statusCode();
                 return Collections.emptyList();
             }
         } catch (IOException | InterruptedException e) {
-            System.err.println("Erro de comunicação com a API "+ url +": "+ e.getMessage());
+            lastApiMessage = "Erro de comunicação com a API "+ url +": "+ e.getMessage();
 
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();

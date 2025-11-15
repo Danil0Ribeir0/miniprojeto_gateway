@@ -13,12 +13,10 @@ public class enrollmentService {
     private final subjectRepository subjectRepository;
     private final enrollmentIdGenerator idGenerator;
 
-    public enrollmentService() {
-        this.studentRepository = new studentRepository();
-
+    public enrollmentService(studentRepository studentRepository, subjectRepository subjectRepository) {
+        this.studentRepository = studentRepository;
+        this.subjectRepository = subjectRepository;
         this.idGenerator = new enrollmentIdGenerator();
-
-        this.subjectRepository = new subjectRepository();
     }
 
     public enrollmentResult simulateEnrollment(String studentId, String subjectId) {

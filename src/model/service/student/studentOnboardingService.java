@@ -10,8 +10,8 @@ public class studentOnboardingService {
     private final studentRepository studentRepository;
     private final enrollmentIdGenerator idGenerator;
 
-    public studentOnboardingService() {
-        this.studentRepository = new studentRepository();
+    public studentOnboardingService(studentRepository studentRepository) {
+        this.studentRepository = studentRepository;
         this.idGenerator = new enrollmentIdGenerator();
     }
 
@@ -21,6 +21,10 @@ public class studentOnboardingService {
 
         if (student == null) {
             return failResult.withMessage("Discente não encontrado.");
+        }
+
+        if (!student.isStatusActive()) {
+            return failResult.withMessage("Geração de ID não permitida. Discente com status acadêmico: " + student.getStatus());
         }
 
         if (student.getPrimaryEnrollmentId() != null) {

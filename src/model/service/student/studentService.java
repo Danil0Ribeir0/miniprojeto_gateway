@@ -11,8 +11,8 @@ import java.util.List;
 public class studentService {
     private final studentRepository repository;
 
-    public studentService() {
-        this.repository = new studentRepository();
+    public studentService(studentRepository repository) {
+        this.repository = repository;
     }
 
     public List<student> listAllStudents() {

@@ -1,9 +1,11 @@
 package controller.subject;
 
 import model.entity.subject;
+import model.repository.studentRepository;
 import model.repository.subjectRepository;
 import model.service.subject.enrollmentService;
 import model.service.subject.enrollmentService.enrollmentResult;
+import api.apiBase;
 
 import java.util.List;
 
@@ -13,7 +15,9 @@ public class subjectController {
 
     public subjectController() {
         this.subjectRepository = new subjectRepository();
-        this.enrollmentService = new enrollmentService();
+        studentRepository studentRepository = new studentRepository();
+
+        this.enrollmentService = new enrollmentService(studentRepository, this.subjectRepository);
     }
 
     public List<subject> listAllSubjects() {
@@ -26,5 +30,9 @@ public class subjectController {
 
     public enrollmentResult simulateCancellation(String studentId, String enrollmentId) {
         return enrollmentService.simulateCancellation(studentId, enrollmentId);
+    }
+
+    public String getLastApiMessage() {
+        return apiBase.getLastApiMessage();
     }
 }

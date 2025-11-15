@@ -54,6 +54,13 @@ public class subjectView {
     private void listAllSubjects() {
         System.out.println("\n--- LISTA DE DISCIPLINAS ---");
         List<subject> subjects = controller.listAllSubjects();
+        String apiMessage = controller.getLastApiMessage();
+
+        if (apiMessage != null) {
+            System.err.println("[LOG] ERRO DA API:");
+            System.err.println(apiMessage);
+        }
+
         if (subjects.isEmpty()) {
             System.out.println("Nenhuma disciplina encontrada na API.");
             return;

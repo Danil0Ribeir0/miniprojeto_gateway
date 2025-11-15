@@ -54,6 +54,13 @@ public class bookView {
     private void listAllBooks() {
         System.out.println("\n--- LISTA DE LIVROS NO ACERVO ---");
         List<book> books = controller.listAllBooks();
+        String apiMessage = controller.getLastApiMessage();
+
+        if (apiMessage != null) {
+            System.err.println("[LOG] ERRO DA API:");
+            System.err.println(apiMessage);
+        }
+
         if (books.isEmpty()) {
             System.out.println("Nenhum livro encontrado na API.");
             return;

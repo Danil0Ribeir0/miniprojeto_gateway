@@ -17,7 +17,6 @@ public abstract class jsonObjectMapper<T> implements IJsonObjectMapper<T> {
                     getTypeReference()
             );
         } catch (Exception e) {
-            System.err.println("Erro de deserialização JSON: " + e.getMessage());
             return Collections.emptyList();
         }
     }

@@ -9,9 +9,9 @@ public class bookReservationService {
     private final studentRepository studentRepository;
     private final bookRepository bookRepository;
 
-    public bookReservationService() {
-        this.studentRepository = new studentRepository();
-        this.bookRepository = new bookRepository();
+    public bookReservationService(studentRepository studentRepository, bookRepository bookRepository) {
+        this.studentRepository = studentRepository;
+        this.bookRepository = bookRepository;
     }
 
     public ReservationResult simulateReservation(String studentId, String bookId) {

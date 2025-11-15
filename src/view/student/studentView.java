@@ -59,6 +59,13 @@ public class studentView {
     private void listAllStudents() {
         System.out.println("\n--- LISTA DE DISCENTES ---");
         List<student> students = controller.listAllStudents();
+        String apiMessage = controller.getLastApiMessage();
+
+        if (apiMessage != null) {
+            System.err.println("[LOG] ERRO DA API:");
+            System.err.println(apiMessage);
+        }
+
         if (students.isEmpty()) {
             System.out.println("Nenhum discente encontrado na API.");
             return;
