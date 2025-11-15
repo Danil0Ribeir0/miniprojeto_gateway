@@ -41,9 +41,6 @@ public class studentView {
                     case 3:
                         registerPrimaryEnrollmentId(scanner);
                         break;
-                    case 4:
-                        displayStudentEnrollments(scanner);
-                        break;
                     case 0:
                         break;
                     default:
@@ -88,6 +85,18 @@ public class studentView {
             System.out.printf("Status Acadêmico: %s (Ativo: %b)\n", s.getStatus(), s.isStatusActive());
             System.out.printf("ID de Matrícula Principal: %s\n", s.getPrimaryEnrollmentId() != null ? s.getPrimaryEnrollmentId() : "N/A");
             System.out.println("Reservas de Livro Simuladas: " + s.getBookReservations().size());
+
+            List<Map.Entry<String, String>> enrollments = s.getEnrollments();
+            System.out.println("\n--- MATRÍCULAS SIMULADAS ---");
+
+            if (enrollments.isEmpty()) {
+                System.out.println("O discente não possui disciplinas matriculadas (simuladas).");
+            } else {
+                System.out.println("Disciplinas Matriculadas:");
+                enrollments.forEach(e -> System.out.printf("  > ID Matrícula Único: %s | ID Disciplina: %s\n",
+                        e.getKey(), e.getValue()));
+            }
+
         } else {
             System.out.println("Discente com ID " + id + " não encontrado.");
         }
@@ -105,28 +114,5 @@ public class studentView {
         if (result.isSuccess()) {
             System.out.println("ID de Matrícula Gerado: " + result.getEnrollmentId());
         }
-    }
-
-    private void displayStudentEnrollments(Scanner scanner) {
-        System.out.print("Digite o ID do Discente para exibir as matrículas: ");
-        String studentId = scanner.nextLine();
-
-        student s = controller.getStudentForEnrollmentsDisplay(studentId);
-
-        if (s == null) {
-            System.out.println("Discente com ID " + studentId + " não encontrado.");
-            return;
-        }
-
-        List<Map.Entry<String, String>> enrollments = s.getEnrollments();
-
-        System.out.println("\n--- MATRÍCULAS SIMULADAS DE " + s.getNome() + " ---");
-        if (enrollments.isEmpty()) {
-            System.out.println("Discente não possui matrículas simuladas.");
-            return;
-        }
-
-        enrollments.forEach(e -> System.out.printf("ID Matrícula Único: %s | ID Disciplina: %s\n",
-                e.getKey(), e.getValue()));
     }
 }
