@@ -20,10 +20,9 @@ public class studentView {
         int option = -1;
         while (option != 0) {
             System.out.println("\n--- DOMÍNIO DISCENTE ---");
-            System.out.println("1. [CONSULTA] Listar todos os Discentes");
-            System.out.println("2. [CONSULTA] Detalhes do Discente por ID");
-            System.out.println("3. [SIMULAÇÃO] Gerar ID de Matrícula Principal");
-            System.out.println("4. [SIMULAÇÃO] Exibir Matrículas de um Discente");
+            System.out.println("1. Listar todos os Discentes");
+            System.out.println("2. Detalhes do Discente por ID");
+            System.out.println("3. Gerar ID de Matrícula Principal");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Sua opção: ");
 
